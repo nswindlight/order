@@ -16,6 +16,7 @@ class Log extends AuthController {
 	public function index()
 	{
 		$data['assets'] = $this->lw_assets->getPageAssets(['datetime']);
+
 		$data['breadcrumb'] = [
             ['日志管理',null]
         ];

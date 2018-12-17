@@ -141,7 +141,14 @@ class Lw_assets {
                 'assets/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css'
             ]
         ];
-
+        //excel插件
+        $base['xlsx'] = [
+            'js'=>[
+                'assets/plugins/xlsx/xlsx.full.min.js',
+                'assets/plugins/xlsx/Blob.js',
+                'assets/plugins/xlsx/FileSaver.js',
+            ]
+        ];
         return $base;
     }
 }
