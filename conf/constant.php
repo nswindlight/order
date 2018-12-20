@@ -5,9 +5,9 @@
  * 系统常量
  */
 defined('IS_DEBUG')         OR define('IS_DEBUG', false); // 开启测试
-defined('WEB_NAME')         OR define('WEB_NAME', '管理新系统'); // 网站名称
-defined('WEB_TITLE')        OR define('WEB_TITLE', '<b>LW</b>Admin'); // 网站名称
-defined('WEB_TITLE_SHORT')  OR define('WEB_TITLE_SHORT', '<b>L</b>Ad'); // 网站名称
+defined('WEB_NAME')         OR define('WEB_NAME', '管理系统'); // 网站名称
+defined('WEB_TITLE')        OR define('WEB_TITLE', '管理系统'); // 网站名称
+defined('WEB_TITLE_SHORT')  OR define('WEB_TITLE_SHORT', '系统'); // 网站名称
 defined('WEB_COMPANY')      OR define('WEB_COMPANY', 'LW工作室'); // 版权组织
 
 /**

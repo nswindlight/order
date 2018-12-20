@@ -22,4 +22,13 @@ class OrderGoods_model extends CI_Model
     public function update($field,$where){
         return $this->tb_order_good->update($field,$where);
     }
+
+    public function getList($log_id){
+        $data = $this->db->select('*')
+            ->from(static::$_tableName)
+            ->where('log_id', $log_id)
+            ->get()
+            ->result_array();
+        return $data;
+    }
 }

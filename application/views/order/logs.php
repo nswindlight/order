@@ -72,20 +72,6 @@
         btnSearch.on("click", function () {
             getListByPage(1);
         });
-        btnExcel.on("click", function () {
-            var param = {};
-            Utils.ajax({
-                url: "<?=site_url('order/excel')?>",
-                data: {param: JSON.stringify(param)},
-                success: function (data) {
-                    if(data.success){
-                        window.open(data.excelPath);
-                    } else {
-                        Utils.noticeWarning(data.msg);
-                    }
-                }
-            });
-        })
     }
 
     // 获取列表数据

@@ -144,6 +144,7 @@ class Order extends AuthController
                 'week_info'=>trim($v[36]),
                 'shanghu_good_num'=>$shanghu_good_num,
                 'good_messae'=>$g_code,
+                'ctime' => ''
             ];
             $fields[] = $field;
         }
@@ -169,21 +170,136 @@ class Order extends AuthController
             $this->rs['msg'] = '导入纪录保存失败，请重新提交';
             return $this->rs;
         }
-        $i = 0;
+        $i= 0;
         foreach($fields as $k=>$v){
             $field = $v;
             $field['log_id'] = $log_id;
+            $field['ctime'] = $log['ctime'];
             if($this->orderGoods_model->create($field)){
                 $i ++;
             }else{
                 $err[] = $k;
             }
         }
-        $log_id = $this->importLog_model->update(['success_count'=>$i],$log_id);
+        $this->importLog_model->update(['success_count'=>$i],['id'=>$log_id]);
 
         $this->rs['success'] = true;
-        $this->rs['msg'] =  '导入成功';
+        $this->rs['msg'] =  '导入成功'.$i."条数据";
         $this->rs['id'] = $log_id;
         lwReturn($this->rs);
     }
+
+    public function info($log_id){
+        $data = [];
+        $data['data'] = $this->orderGoods_model->getList($log_id);
+        $data['breadcrumb'] = [
+            ['导入纪录',site_url(['order/logs'])],
+            ['导入信息','']
+        ];
+
+        $this->_tpl_page('order/info', $data);
+    }
+
+    public function excel(){
+        $tpls = [
+            '威妮海购'=>[
+                '订单编号'=>function($model){return $model['order_sn'];},
+                '订单时间'=>'',
+                '买家会员名'=>'',
+                '支付人'=>function($model){return '';},
+                '收件人'=>function($model){return $model['receiver'];},
+                '身份证'=>function($model){return $model['people_num'];},
+                '手机号'=>function($model){return $model['phone_num'];},
+                '州省'=>function($model){return $model['sheng'];},
+                '区市'=>function($model){return $model['shi'];},
+                '区县'=>function($model){return $model['qu'];},
+                '详细地址'=>function($model){return $model['address'];},
+                '商品编号'=>function($model){return $model['good_messae'];},
+                '数量'=>function($model){return $model['good_messae'].'*'.$model['shanghu_good_num'];},
+                '售价(含税)'=>function($model){return $model['actual_price'];},
+                '运费'=>'',
+                '优惠'=>'',
+                '客户备注'=>''
+
+            ],
+            '斯旺森'=>[
+                '日期'=>function($model){return date("Y月d日",strtotime($model['ctime']));},
+                'SW码'=>function($model){return $model['good_messae'];},
+                '商品名称'=>function($model){return $model['good_name'];},
+                '数量'=>function($model){return $model['shanghu_good_num'];},
+                '姓名'=>function($model){return $model['receiver'];},
+                '地址'=>function($model){return $model['address'];},
+                '电话'=>function($model){return $model['phone_num'];},
+                '身份证'=>function($model){return $model['people_num'];},
+                '发出运单号（京东快递）'=>''
+            ],
+            '海带'=>[
+                '订单编号'=>function($model){return $model['order_sn'];},
+                '支付单号'=>'',
+                '货号'=>function($model){return $model['good_messae'];},
+                '商品名称'=>function($model){return $model['good_name'];},
+                '有效期/生产日期'=>'',
+                '数量'=>function($model){return $model['shanghu_good_num'];},
+                '收货人'=>function($model){return $model['receiver'];},
+                '联系电话'=>function($model){return $model['phone_num'];},
+                '身份证号码'=>function($model){return $model['people_num'];},
+                '省'=>function($model){return $model['sheng'];},
+                '市'=>function($model){return $model['shi'];},
+                '区'=>function($model){return $model['qu'];},
+                '详细地址'=>function($model){return $model['address'];},
+                '留言'=>''
+
+            ],
+            '德国双心'=>[
+                '订单编号'=>function($model){return $model['order_sn'];},
+                '收货人姓名'=>function($model){return $model['receiver'];},
+                '收货人身份证号码'=>function($model){return $model['people_num'];},
+                '收货地址（省）'=>function($model){return $model['sheng'];},
+                '收货地址（市）'=>function($model){return $model['shi'];},
+                '收货地址（区）'=>function($model){return $model['qu'];},
+                '收货地址（详细）'=>function($model){return $model['address'];},
+                '联系电话'=>function($model){return $model['phone_num'];},
+                '商品名称'=>function($model){return $model['good_name'];},
+                '商品数量'=>function($model){return $model['shanghu_good_num'];},
+                '商品编号'=>function($model){return $model['good_messae'];},
+                '发货店铺'=>function($model){return '洋货节';},
+                '备注',
+                '支付人姓名',
+                '支付人身份证',
+                '快递公司'
+
+            ],
+            'PPR总部'=>[
+                '订单号'=>function($model){return $model['order_sn'];},
+                '商品ID'=>'',
+                '商品SN'=>function($model){return $model['good_messae'];},
+                '商品单价(必填)'=>function($model){return $model['actual_price'];},
+                '商品数量(必填)'=>function($model){return $model['shanghu_good_num'];},
+                '收货人姓名'=>function($model){return $model['receiver'];},
+                '收货人电话'=>function($model){return $model['phone_num'];},
+                '身份证'=>function($model){return $model['phone_num'];},
+                '省'=>function($model){return $model['sheng'];},
+                '市'=>function($model){return $model['shi'];},
+                '区县'=>function($model){return $model['qu'];},
+                '详细地址'=>function($model){return $model['address'];},
+                '邮编',
+                '所属会员'=>function($model){return '13004154845';}
+
+            ],
+            'HealthMore'=>[
+                '产品名称'=>function($model){return $model['good_name'];},
+                '商品编号'=>function($model){return $model['order_sn'];},
+                '数量'=>function($model){return $model['shanghu_good_num'];},
+                '代理用户'=>'',
+                '收货人'=>function($model){return $model['receiver'];},
+                '身份证号'=>function($model){return $model['phone_num'];},
+                '手机号'=>function($model){return $model['phone_num'];},
+                '省份'=>function($model){return $model['sheng'];},
+                '城市'=>function($model){return $model['shi'];},
+                '县区'=>function($model){return $model['qu'];},
+                '地址'=>function($model){return $model['address'];},
+            ],
+        ];
+    }
+
 }

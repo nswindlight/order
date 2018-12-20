@@ -162,15 +162,6 @@ $assets['jsList'] = isset($assets['jsList']) ? $assets['jsList'] : array();
         </div>
     </div>
     <!-- /.content-wrapper -->
-
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>版本</b> <?= VERSION ?>
-        </div>
-        <strong>版权 &copy; 2016-<?= date('Y') ?> <a href="#"><?= WEB_COMPANY ?></a></strong> 所有.
-    </footer>
-    <!-- Add the sidebar's background. This div must be placed
-         immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->

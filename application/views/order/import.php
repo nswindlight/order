@@ -16,7 +16,7 @@
                 <input type="file" id="file_input">
             </div>
             <div class="col-sm-4">
-                <button type="button" class="btn-check btn btn-block btn-primary btn-sm">验证数据</button>
+                <button type="button" class="btn-check btn btn-block btn-primary btn-sm">提交数据</button>
             </div>
         </div>
     </div>
@@ -51,12 +51,24 @@
                 return;
             }
         }
+        var errs = new Array();
+        $.each(data,function(n,v){
+            if(!v[0] || !v[4] || !v[7]|| !v[8] || !v[14]|| !v[20] || !v[21] || !v[22] || !v[23] || !v[24] || !v[25] ||  !v[34]){
+                var line = n+1;
+                errs.push('第'+line +'行数据存在问题,必填项目未全部填写');
+            }
+        })
+        if(errs.length >0){
+            Utils.noticeAlive(errs.join('<br />'),'error');
+            return;
+        }
+
         data.splice(0,1);
         Utils.ajax({
             url:'<?= site_url("order/add")?>',
             data:{data:JSON.stringify(data)},
             success:function(data){
-
+                Utils.alertSuccess(data.msg)
             }
         })
     }

@@ -20,14 +20,15 @@ class ImportLog_model extends CI_Model
         $post = lwCheckValue($post, ['startDate', 'endDate']);
 
         $startDate = $post['startDate'];
-        $startTime = strtotime($startDate.' 00:00:00');
-        $endTime = $post['endDate'] ? strtotime($post['endDate'].' 23:59:59') : strtotime($startDate.' 23:59:59');
-        $where = "ctime BETWEEN {$startTime} AND {$endTime}";
+        $startTime = $startDate.' 00:00:00';
+        $endTime = $post['endDate'] ? ($post['endDate'].' 23:59:59') : ($startDate.' 23:59:59');
+        $where = "ctime BETWEEN '{$startTime}' AND '{$endTime}'";
         $sql = "SELECT
                     a.*
                 FROM
                     " . static::$_tableName . " a
                 WHERE {$where}";
+
         $hasWhere = true;
         $group = null;
         $order = "a.id desc";

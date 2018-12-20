@@ -53,7 +53,15 @@ var Utils = function () {
         }
     }
 
-
+    var noticeAlive =  function (msg, style) {
+        spop({
+            template: msg,
+            group: 'lnfilm',
+            position: 'top-center',
+            style: style || 'info',
+            autoclose: false
+        });
+    };
     var notice = function (msg, style, time) {
         spop({
             template: msg,
@@ -140,7 +148,6 @@ var Utils = function () {
         };
         swal(opt);
     };
-    
     var alertSys = function (data) {
         if(data.success) {
             alertSuccess(data.msg);
@@ -400,6 +407,9 @@ var Utils = function () {
         },
         noticeSys: function (data) {
             noticeSys(data);
+        },
+        noticeAlive:function(msg, style){
+            noticeAlive(msg, style)
         },
         loginValidate: function (form, rules, callback) {
             loginValidate(form, rules, callback);

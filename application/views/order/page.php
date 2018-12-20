@@ -32,7 +32,7 @@
                         <td><?= $data['num'] ?></td>
                         <td><?= $data['success_count'] ?></td>
                         <td>
-                            <a href="<?=  site_url('order/list/'.$data['id'])?>" class="btn btn-sm btn-info btn-log-info">详情</a>
+                            <a href="<?=  site_url('order/info/'.$data['id'])?>" class="btn btn-sm btn-info btn-log-info">详情</a>
                         </td>
                     </tr>
                     <?php $i++; endforeach;
