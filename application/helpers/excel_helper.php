@@ -1,5 +1,5 @@
 <?php
-require_once 'PHPExcel-1.8.0/PHPExcel.php';
+require_once 'PHPExcel-1.8.1/PHPExcel.php';
 
 function getExcel($titles, $widths, $list, $fn, $conv = false)
 {
