@@ -10,7 +10,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">操作</h3>
+                <h3 class="box-title">导出</h3>
 
                 <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -18,9 +18,10 @@
             </div><!-- /.box-header -->
             <div class="box-body">
                 <div class="row col-md-12">
-                    <div class="form-body">
-
-                    </div><!-- /.box-body -->
+                    <?php foreach($shanghu as $v): ?>
+                    <button class="export-btn btn btn-success" data-name="<?= $v ?>"><?= $v ?></button>
+                    <?php endforeach;?>
+                    <!-- /.box-body -->
                 </div><!-- /.row -->
             </div><!-- ./box-body -->
         </div><!-- /.box -->
@@ -84,6 +85,20 @@
             Utils.ajax({
                 url: "<?=site_url('order/excel')?>",
                 data: {param: JSON.stringify(param)},
+                success: function (data) {
+                    if(data.success){
+                        window.open(data.excelPath);
+                    } else {
+                        Utils.noticeWarning(data.msg);
+                    }
+                }
+            });
+        })
+        $(".export-btn").click(function(){
+            var tpl_name = $(this).attr('data-name');
+            Utils.ajax({
+                url: "<?=site_url('order/excel/'.$log_id)?>",
+                data: {tpl_name: tpl_name},
                 success: function (data) {
                     if(data.success){
                         window.open(data.excelPath);

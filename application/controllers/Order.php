@@ -191,16 +191,18 @@ class Order extends AuthController
 
     public function info($log_id){
         $data = [];
+        $data['assets'] = $this->lw_assets->getPageAssets();
         $data['data'] = $this->orderGoods_model->getList($log_id);
         $data['breadcrumb'] = [
             ['导入纪录',site_url(['order/logs'])],
             ['导入信息','']
         ];
-
+        $data['shanghu'] = ['威妮海购','斯旺森','海带','德国双心','PPR总部','HealthMore'];
+        $data['log_id'] = $log_id;
         $this->_tpl_page('order/info', $data);
     }
 
-    public function excel(){
+    public function excel($log_id){
         $tpls = [
             '威妮海购'=>[
                 '订单编号'=>function($model){return $model['order_sn'];},
@@ -263,10 +265,10 @@ class Order extends AuthController
                 '商品数量'=>function($model){return $model['shanghu_good_num'];},
                 '商品编号'=>function($model){return $model['good_messae'];},
                 '发货店铺'=>function($model){return '洋货节';},
-                '备注',
-                '支付人姓名',
-                '支付人身份证',
-                '快递公司'
+                '备注'=>'',
+                '支付人姓名'=>'',
+                '支付人身份证'=>'',
+                '快递公司'=>''
 
             ],
             'PPR总部'=>[
@@ -282,7 +284,7 @@ class Order extends AuthController
                 '市'=>function($model){return $model['shi'];},
                 '区县'=>function($model){return $model['qu'];},
                 '详细地址'=>function($model){return $model['address'];},
-                '邮编',
+                '邮编'=>'',
                 '所属会员'=>function($model){return '13004154845';}
 
             ],
@@ -300,6 +302,52 @@ class Order extends AuthController
                 '地址'=>function($model){return $model['address'];},
             ],
         ];
+        $post = $this->input->post();
+        $tpl_name = empty($post['tpl_name'])? '':trim($post['tpl_name']);
+        if(!$log_id || !$tpl_name || !isset($tpls[$tpl_name])){
+            $this->rs['msg'] = '参数错误';
+
+            lwReturn($this->rs);
+        }
+        $data = $this->orderGoods_model->getList($log_id,$tpl_name);
+        if(!$data){
+            $this->rs['msg'] = '无数据';
+            lwReturn($this->rs);
+        }
+        $excel_data = [];
+        $title = [];
+        foreach($tpls[$tpl_name] as $k=>$v){
+            $title[] = $k;
+        }
+        foreach($data as $v){
+            $d = [];
+            foreach($tpls[$tpl_name] as $k=>$fn){
+                if($fn){
+                    $d[] = $fn($v);
+                }else{
+                    $d[] = '';
+                }
+            }
+            $excel_data[] = $d;
+        }
+        $width = [];
+        for ($i = 0; $i < sizeof($title); $i++) {
+            $width[$i] = 30;
+        }
+        $this->load->library('lw_string');
+        $this->load->helper('excel');
+        $date = date('Y-d', time());
+        $uniStr = $this->lw_string->getUniName();
+        $path = "outputExcel/log/" . $date;
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        $fn = $path . "/" . $uniStr . ".xls";
+        getExcel($title, $width, $excel_data , "$fn");
+        $this->rs['success'] = true;
+        $this->rs['msg'] = 'excel导出';
+        $this->rs['excelPath'] = base_url($fn);
+        lwReturn($this->rs);
     }
 
 }
