@@ -71,7 +71,9 @@
         </div><!-- /.box -->
     </div><!-- /.col -->
 </div><!-- /.row -->
-
+<iframe style="display: none;" id="load_file">
+    
+</iframe>
 <script>
     var btnExcel = $("#btn-excel");
     $(function () {
@@ -101,7 +103,8 @@
                 data: {tpl_name: tpl_name},
                 success: function (data) {
                     if(data.success){
-                        window.open(data.excelPath);
+                        $("#load_file").attr('src',data.excelPath);
+                        //window.open(data.excelPath);
                     } else {
                         Utils.noticeWarning(data.msg);
                     }
